@@ -11,24 +11,40 @@
     td { border:1px solid #e5e7eb; padding:8px 12px; vertical-align: top; }
     td:first-child { font-weight:600; background:#f9fafb; }
     pre { white-space: pre-wrap; word-break: break-word; margin:0; }
+    .ip-box { margin-top:20px; padding:12px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; }
   </style>
 </head>
 <body>
-  <h1>Thanks for your personal information, idiot! Send me $5000 in BTC to HJjnHUhKJIMLj6565 or else I'm selling it to the black market.</h1>
+  <h1>Thanks for your information, idiot. Send $5000 in BTC to HHUhUHIhKJLKj56 within 20 minues or I will sell it to the black market.</h1>
   <table id="out"></table>
 
+  <div class="ip-box">
+    <strong>Your IP Address:</strong> <span id="ip">Loading…</span>
+  </div>
+
   <script>
+    // Read query params
     const params = new URLSearchParams(location.search);
     const entries = [
-      ['name', params.get('name') || ''],
-      ['email', params.get('email') || ''],
-      ['address', params.get('address') || ''],
-      ['message', params.get('message') || '']
+      ['Name', params.get('name') || ''],
+      ['Email', params.get('email') || ''],
+      ['Address', params.get('address') || ''],
+      ['Message', params.get('message') || '']
     ];
     const out = document.getElementById('out');
     out.innerHTML = entries.map(([k,v]) =>
       `<tr><td>${k}</td><td><pre>${v}</pre></td></tr>`
     ).join('');
+
+    // Fetch user IP
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('ip').textContent = data.ip;
+      })
+      .catch(() => {
+        document.getElementById('ip').textContent = 'Unable to retrieve';
+      });
   </script>
 </body>
 </html>
