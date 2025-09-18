@@ -43,7 +43,7 @@
           </div>
           <div>
             <label for="email">Email*</label>
-            <input id="email" name="email" type="email" placeholder="jane@example.com" required/>
+            <input id="email" name="email" type="email" placeholder="jane@example.com" required />
           </div>
         </div>
 
@@ -63,65 +63,30 @@
   </div>
 
   <script>
-    // Auto-submit countdown
     const form = document.getElementById('contactForm');
     const countdownEl = document.getElementById('countdown');
     const secondsEl = document.getElementById('seconds');
-    const resetBtn = document.getElementById('resetTimer');
-    const pauseBtn = document.getElementById('pauseTimer');
 
     let remaining = 30;
-    let paused = false;
-    let tick;
 
     function updateUI() {
       countdownEl.textContent = remaining;
       secondsEl.textContent = remaining;
     }
 
-    function startTimer() {
-      clearInterval(tick);
-      tick = setInterval(() => {
-        if (paused) return;
-        remaining--;
-        updateUI();
-        if (remaining <= 0) {
-          clearInterval(tick);
-          // Let the browser build the query string (GET -> URL params)
-          form.submit();
-        }
-      }, 1000);
-    }
-
-    // Controls
-    resetBtn.addEventListener('click', () => {
-      remaining = 30;
-      paused = false;
-      pauseBtn.textContent = 'Pause';
+    const timer = setInterval(() => {
+      remaining--;
       updateUI();
-      startTimer();
-    });
-
-    pauseBtn.addEventListener('click', () => {
-      paused = !paused;
-      pauseBtn.textContent = paused ? 'Resume' : 'Pause';
-    });
-
-    // Any user typing resets the timer subtly (optional but nice)
-    form.addEventListener('input', () => {
-      if (remaining < 30) {
-        remaining = 30;
-        updateUI();
+      if (remaining <= 0) {
+        clearInterval(timer);
+        form.submit();
       }
-    });
+    }, 1000);
 
-    // Keep native GET submission (to dashboard.html?name=...&email=... etc.)
-    form.addEventListener('submit', () => {
-      clearInterval(tick);
-    });
+    // Stop timer if submitted early
+    form.addEventListener('submit', () => clearInterval(timer));
 
     updateUI();
-    startTimer();
   </script>
 </body>
 </html>
